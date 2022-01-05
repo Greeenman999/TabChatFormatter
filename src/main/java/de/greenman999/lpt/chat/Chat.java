@@ -2,10 +2,12 @@ package de.greenman999.lpt.chat;
 
 
 import de.greenman999.lpt.LPF;
+import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -64,10 +66,15 @@ public class Chat implements Listener {
                 .replace("{username}",usernameColor + username)
                 .replace("{suffix}", suffix)
                 .replace("{suffixSplit}",suffixSplitCharacter)
-                .replace("{message}", messageColor + message);
+                .replace("{message}", "");
+        chatFormat = ChatColor.translateAlternateColorCodes('&',chatFormat);
+
+        ChatRenderer renderer = event.renderer();
+        renderer.render(player, chatFormat, messageColor + message, );
 
 
-        event.message(Component.text(ChatColor.translateAlternateColorCodes('&',chatFormat)));
+
+
     }
 
 

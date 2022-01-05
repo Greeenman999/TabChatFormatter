@@ -14,21 +14,16 @@ public class Tab {
 
     private final LPF lpf;
 
-    private final FileConfiguration config;
-    private String prefixSplitCharacter;
-    private String suffixSplitCharacter;
-
     public Tab(LPF LPF) {
         this.lpf = LPF;
 
-        config = LPF.getConfig();
-        prefixSplitCharacter = config.getString("prefix-split-character");
-        suffixSplitCharacter = config.getString("suffix-split-character");
     }
 
 
 
     public void updateTablist() {
+        String prefixSplitCharacter = lpf.getConfig().getString("prefix-split-character");
+        String suffixSplitCharacter = lpf.getConfig().getString("suffix-split-character");
         for(Player player : Bukkit.getOnlinePlayers()) {
             User lpUser = lpf.getAPI().getUserManager().getUser(player.getUniqueId());
             LPFUser user = new LPFUser(player.getUniqueId(), lpUser.getCachedData().getMetaData().getPrefix(), lpUser.getCachedData().getMetaData().getSuffix(), lpUser.getCachedData().getMetaData().getMetaValue("usernameColor"), lpUser.getCachedData().getMetaData().getMetaValue("messageColor"));
@@ -37,7 +32,7 @@ public class Tab {
             String suffix = user.suffix();
             String username = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName());
 
-            String tabFormat = config.getString("tab-format");
+            String tabFormat = lpf.getConfig().getString("tab-format");
 
             if(prefix == null) {
                 prefix = "";
@@ -51,12 +46,12 @@ public class Tab {
                 suffixSplitCharacter = "";
             }
 
-            player.sendMessage("Prefix: " + prefix);
+            /*player.sendMessage("Prefix: " + prefix);
             player.sendMessage("PrefixSplitCharacter: " + prefixSplitCharacter);
             player.sendMessage("Username Color: " + usernameColor);
             player.sendMessage("Username: " + username);
             player.sendMessage("Suffix: " + suffix);
-            player.sendMessage("SuffixSplitCharacter: " + suffixSplitCharacter);
+            player.sendMessage("SuffixSplitCharacter: " + suffixSplitCharacter);*/
 
 
 

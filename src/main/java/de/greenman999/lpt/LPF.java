@@ -1,6 +1,7 @@
 package de.greenman999.lpt;
 
 import de.greenman999.lpt.chat.Chat;
+import de.greenman999.lpt.listeners.LuckpermsListener;
 import de.greenman999.lpt.listeners.PlayerJoinListener;
 import de.greenman999.lpt.tab.Tab;
 import de.greenman999.lpt.listeners.PlayerCommandListener;
@@ -23,6 +24,7 @@ public final class LPF extends JavaPlugin {
     private Tab tab;
     private PlayerCommandListener playerCommandListener;
     private PlayerJoinListener playerJoinListener;
+    private LuckpermsListener luckpermsListener;
 
     @Override
     public void onEnable() {
@@ -32,6 +34,7 @@ public final class LPF extends JavaPlugin {
         tab = new Tab(this);
         playerCommandListener = new PlayerCommandListener(tab,chat,this);
         playerJoinListener = new PlayerJoinListener(tab);
+        luckpermsListener = new LuckpermsListener(this, tab);
 
         CommandAPI.onEnable(this);
         registerAllCommands();

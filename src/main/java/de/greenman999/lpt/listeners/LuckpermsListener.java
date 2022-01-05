@@ -22,12 +22,10 @@ public class LuckpermsListener {
     }
 
     private void onDataRecalculate(UserDataRecalculateEvent event) {
-        lpf.log("data event");
         tab.updateTablist();
     }
 
     private void onNodeMutate(NodeMutateEvent event) {
-        lpf.log("node event");
         tab.updateTablist();
     }
 }

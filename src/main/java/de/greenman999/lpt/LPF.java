@@ -4,7 +4,6 @@ import de.greenman999.lpt.chat.Chat;
 import de.greenman999.lpt.listeners.PlayerJoinListener;
 import de.greenman999.lpt.tab.Tab;
 import de.greenman999.lpt.listeners.PlayerCommandListener;
-import de.greenman999.lpt.util.TabUserCache;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
@@ -17,14 +16,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LPF extends JavaPlugin {
 
-    private LPF plugin;
-    FileConfiguration config = getConfig();
-
-    PluginManager pluginManager = Bukkit.getPluginManager();
+    private final PluginManager pluginManager = Bukkit.getPluginManager();
 
     private final String PREFIX = "§7[§eLPF§7]§r ";
     private Chat chat;
-    private TabUserCache tabUserCache;
     private Tab tab;
     private PlayerCommandListener playerCommandListener;
     private PlayerJoinListener playerJoinListener;
@@ -32,12 +27,11 @@ public final class LPF extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        plugin = this;
+
         chat = new Chat(this);
-        tabUserCache = new TabUserCache(this);
-        tab = new Tab(tabUserCache,this);
-        playerCommandListener = new PlayerCommandListener(tabUserCache,tab,chat,this);
-        playerJoinListener = new PlayerJoinListener(tabUserCache,tab);
+        tab = new Tab(this);
+        playerCommandListener = new PlayerCommandListener(tab,chat,this);
+        playerJoinListener = new PlayerJoinListener(tab);
 
         CommandAPI.onEnable(this);
         registerAllCommands();
@@ -46,7 +40,6 @@ public final class LPF extends JavaPlugin {
         pluginManager.registerEvents(playerJoinListener, this);
 
         saveDefaultConfig();
-        this.tabUserCache.reloadCaches();
         minuteScheduler();
 
 
@@ -89,7 +82,6 @@ public final class LPF extends JavaPlugin {
                         .withPermission("lpf.reload")
                         .executes((sender,args) -> {
                             this.reloadConfig();
-                            this.tabUserCache.reloadCaches();
                             this.tab.updateTablist();
                             sender.sendMessage("§aReloaded LPF!");
                         })
@@ -112,7 +104,6 @@ public final class LPF extends JavaPlugin {
 
     public void minuteScheduler() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            this.tabUserCache.reloadCaches();
             this.tab.updateTablist();
         }, 0, 60*20);
     }

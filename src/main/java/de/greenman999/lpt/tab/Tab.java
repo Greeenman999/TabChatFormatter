@@ -2,32 +2,25 @@ package de.greenman999.lpt.tab;
 
 import de.greenman999.lpt.LPF;
 import de.greenman999.lpt.util.LPFUser;
-import de.greenman999.lpt.util.TabUserCache;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.luckperms.api.model.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.Map;
-import java.util.UUID;
-
 public class Tab {
 
-    private final TabUserCache tabUserCache;
-    private final LPF LPF;
+    private final LPF lpf;
 
-    private final Map<UUID, LPFUser> users;
     private final FileConfiguration config;
     private String prefixSplitCharacter;
     private String suffixSplitCharacter;
 
-    public Tab(TabUserCache tabUserCache, LPF LPF) {
-        this.tabUserCache = tabUserCache;
-        this.LPF = LPF;
+    public Tab(LPF LPF) {
+        this.lpf = LPF;
 
-        users = tabUserCache.getUsers();
         config = LPF.getConfig();
         prefixSplitCharacter = config.getString("prefix-split-character");
         suffixSplitCharacter = config.getString("suffix-split-character");
@@ -35,10 +28,10 @@ public class Tab {
 
 
 
-
     public void updateTablist() {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            LPFUser user = users.get(player.getUniqueId());
+            User lpUser = lpf.getAPI().getUserManager().getUser(player.getUniqueId());
+            LPFUser user = new LPFUser(player.getUniqueId(), lpUser.getCachedData().getMetaData().getPrefix(), lpUser.getCachedData().getMetaData().getSuffix(), lpUser.getCachedData().getMetaData().getMetaValue("usernameColor"), lpUser.getCachedData().getMetaData().getMetaValue("messageColor"));
             String prefix = user.prefix();
             String usernameColor = user.usernameColor();
             String suffix = user.suffix();

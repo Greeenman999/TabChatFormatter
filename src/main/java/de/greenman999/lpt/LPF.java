@@ -1,16 +1,9 @@
 package de.greenman999.lpt;
 
-import de.greenman999.lpt.chat.Chat;
-import de.greenman999.lpt.listeners.LuckpermsListener;
-import de.greenman999.lpt.listeners.PlayerJoinListener;
-import de.greenman999.lpt.tab.Tab;
 import dev.jorel.commandapi.CommandAPI;
-import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
-import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class LPF extends JavaPlugin {
@@ -18,29 +11,17 @@ public final class LPF extends JavaPlugin {
     private final PluginManager pluginManager = Bukkit.getPluginManager();
 
     private final String PREFIX = "§7[§eLPF§7]§r ";
-    private Chat chat;
-    private Tab tab;
-    private PlayerJoinListener playerJoinListener;
-    private LuckpermsListener luckpermsListener;
-
 
     @Override
     public void onEnable() {
         // Plugin startup logic
 
-        chat = new Chat(this);
-        tab = new Tab(this);
-        playerJoinListener = new PlayerJoinListener(tab);
-        luckpermsListener = new LuckpermsListener(this, tab);
 
         CommandAPI.onEnable(this);
         registerAllCommands();
 
-        pluginManager.registerEvents(playerJoinListener, this);
-        pluginManager.registerEvents(chat, this);
 
         saveDefaultConfig();
-        minuteScheduler();
 
 
 
@@ -54,46 +35,17 @@ public final class LPF extends JavaPlugin {
     }
 
     private void registerAllCommands() {
-        registerReloadCommand();
+
     }
 
     @Override
     public void onLoad() {
-        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false).useLatestNMSVersion(true)); //Load with verbose output
+        CommandAPI.onLoad(new CommandAPIConfig().verboseOutput(false).useLatestNMSVersion(true).silentLogs(true)); //Load with verbose output
     }
 
 
     public void log(String string) {
         this.getLogger().info(PREFIX + string);
-    }
-
-    public LuckPerms getAPI() {
-        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-        if (provider != null) {
-            LuckPerms api = provider.getProvider();
-            return api;
-        }
-        return null;
-    }
-
-    public void registerReloadCommand() {
-        new CommandAPICommand("lpf")
-                .withSubcommand(new CommandAPICommand("reload")
-                        .withPermission("lpf.reload")
-                        .executes((sender,args) -> {
-                            this.reloadConfig();
-                            this.tab.updateTablist();
-                            sender.sendMessage("§aReloaded LPF!");
-                        })
-
-                )
-                .register();
-    }
-
-    public void minuteScheduler() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> {
-            this.tab.updateTablist();
-        }, 0, 60*20);
     }
 
 }

@@ -2,4 +2,4 @@ name: LPF
 version: '1.0'
 main: de.greenman999.lpt.LPF
 api-version: 1.18
-depend: [LuckPerms]
+softdepend: [LuckPerms]

@@ -1,7 +1,6 @@
 package de.greenman999.lpt.tab;
 
 import de.greenman999.lpt.LPF;
-import de.greenman999.lpt.util.LPFUser;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
@@ -25,10 +24,10 @@ public class Tab {
         String suffixSplitCharacter = lpf.getConfig().getString("suffix-split-character");
         for(Player player : Bukkit.getOnlinePlayers()) {
             User lpUser = lpf.getAPI().getUserManager().getUser(player.getUniqueId());
-            LPFUser user = new LPFUser(player.getUniqueId(), lpUser.getCachedData().getMetaData().getPrefix(), lpUser.getCachedData().getMetaData().getSuffix(), lpUser.getCachedData().getMetaData().getMetaValue("usernameColor"), lpUser.getCachedData().getMetaData().getMetaValue("messageColor"));
-            String prefix = user.prefix();
-            String usernameColor = user.usernameColor();
-            String suffix = user.suffix();
+
+            String prefix = lpUser.getCachedData().getMetaData().getPrefix();
+            String usernameColor = lpUser.getCachedData().getMetaData().getMetaValue("usernameColor");
+            String suffix = lpUser.getCachedData().getMetaData().getSuffix();
             String username = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName());
 
             String tabFormat = lpf.getConfig().getString("tab-format");

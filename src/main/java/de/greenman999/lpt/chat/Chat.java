@@ -6,6 +6,7 @@ import io.papermc.paper.event.player.AsyncChatEvent;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,7 +67,7 @@ public class Chat implements Listener {
                 .replace("{message}", messageColor + message);
 
 
-        event.message(Component.text(chatFormat));
+        event.message(Component.text(ChatColor.translateAlternateColorCodes('&',chatFormat)));
     }
 
 

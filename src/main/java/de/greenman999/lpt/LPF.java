@@ -23,6 +23,7 @@ public final class LPF extends JavaPlugin {
     private PlayerJoinListener playerJoinListener;
     private LuckpermsListener luckpermsListener;
 
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -36,6 +37,7 @@ public final class LPF extends JavaPlugin {
         registerAllCommands();
 
         pluginManager.registerEvents(playerJoinListener, this);
+        pluginManager.registerEvents(chat, this);
 
         saveDefaultConfig();
         minuteScheduler();

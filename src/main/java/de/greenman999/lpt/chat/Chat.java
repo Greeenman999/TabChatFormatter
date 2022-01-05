@@ -4,6 +4,7 @@ package de.greenman999.lpt.chat;
 import de.greenman999.lpt.LPF;
 import io.papermc.paper.chat.ChatRenderer;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.luckperms.api.model.user.User;
@@ -12,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -38,7 +40,7 @@ public class Chat implements Listener {
         String suffix = lpUser.getCachedData().getMetaData().getSuffix();
         String messageColor = lpUser.getCachedData().getMetaData().getMetaValue("messageColor");
         String username = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName());
-        String message = LegacyComponentSerializer.legacySection().serialize(event.message());
+        String originalMessage = LegacyComponentSerializer.legacySection().serialize(event.message());
 
         String chatFormat = lpf.getConfig().getString("chat-format");
 
@@ -66,11 +68,14 @@ public class Chat implements Listener {
                 .replace("{username}",usernameColor + username)
                 .replace("{suffix}", suffix)
                 .replace("{suffixSplit}",suffixSplitCharacter)
-                .replace("{message}", "");
+                .replace("{message}", messageColor + originalMessage);
         chatFormat = ChatColor.translateAlternateColorCodes('&',chatFormat);
 
-        ChatRenderer renderer = event.renderer();
-        renderer.render(player, chatFormat, messageColor + message, );
+        String finalChatFormat = chatFormat;
+        event.renderer((source, sourceDisplayName, message, viewer) -> {
+            return Component.text(finalChatFormat);
+        });
+
 
 
 

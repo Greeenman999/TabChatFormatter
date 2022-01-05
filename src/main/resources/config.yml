@@ -1,0 +1,4 @@
+tab-format: "{prefix}{prefixSplit}{username}{suffixSplit}{suffix}"
+chat-format: "{prefix} {username} {suffix} » {message}"
+prefix-split-character: " "
+suffix-split-character: " "

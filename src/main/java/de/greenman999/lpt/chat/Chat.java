@@ -2,65 +2,76 @@ package de.greenman999.lpt.chat;
 
 
 import de.greenman999.lpt.LPF;
+import de.greenman999.lpt.util.LPFUser;
+import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.luckperms.api.model.user.User;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import java.util.UUID;
 
 public class Chat implements Listener {
 
-    private final LPF LPF;
-    private final FileConfiguration config;
+    private final LPF lpf;
 
-    public Chat(LPF LPF) {
-        this.LPF = LPF;
+    public Chat(LPF lpf) {
+        this.lpf = lpf;
 
-        config = LPF.getConfig();
     }
 
-    /*HashMap<UUID, String> prefixes = Util.getPrefixes();
-    HashMap<UUID, String> suffixes = Util.getSuffixes();
-    HashMap<UUID, String> messageColors = Util.getMessageColors();
-    HashMap<UUID, String> usernameColors = Util.getUsernameColors();*/
-
-    /*@EventHandler
+    @EventHandler
     public void onChat(AsyncChatEvent event) {
+        String prefixSplitCharacter = lpf.getConfig().getString("prefix-split-character");
+        String suffixSplitCharacter = lpf.getConfig().getString("suffix-split-character");
+
         Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        User lpUser = lpf.getAPI().getUserManager().getUser(player.getUniqueId());
 
-        String prefix = prefixes.get(player.getUniqueId());
-        String suffix = suffixes.get(player.getUniqueId());
-        String usernameColor = usernameColors.get(player.getUniqueId());
-        String messageColor = messageColors.get(player.getUniqueId());
-        String username = player.getName();
-        String message = LegacyComponentSerializer.legacyAmpersand().serialize(event.message());
+        String prefix = lpUser.getCachedData().getMetaData().getPrefix();
+        String usernameColor = lpUser.getCachedData().getMetaData().getMetaValue("usernameColor");
+        String suffix = lpUser.getCachedData().getMetaData().getSuffix();
+        String messageColor = lpUser.getCachedData().getMetaData().getMetaValue("messageColor");
+        String username = LegacyComponentSerializer.legacyAmpersand().serialize(player.displayName());
+        String message = LegacyComponentSerializer.legacySection().serialize(event.message());
 
-        String chatFormat = "";
+        String chatFormat = lpf.getConfig().getString("chat-format");
 
         if(prefix == null) {
             prefix = "";
-        }else {
-            prefix = prefix + " ";
-        }
-        if(suffix == null) {
-            suffix = "";
-        }else {
-            username = username + " ";
+            prefixSplitCharacter = "";
         }
         if(usernameColor == null) {
             usernameColor = "";
-        }else {
-            username = usernameColor + username;
         }
-        if(messageColors == null) {
-            messageColor == "";
+        if(suffix == null) {
+            suffix = "";
+            suffixSplitCharacter = "";
+        }
+        if(messageColor == null) {
+            messageColor = "";
         }
 
-        chatFormat = config.getString("chat-format").replace("{prefix} ",prefix).replace("{suffix}",suffix).replace("{username} ",username).replace("{message}",message);
 
 
 
+        chatFormat = chatFormat
+                .replace("{prefix}",prefix)
+                .replace("{prefixSplit}", prefixSplitCharacter)
+                .replace("{username}",usernameColor + username)
+                .replace("{suffix}", suffix)
+                .replace("{suffixSplit}",suffixSplitCharacter)
+                .replace("{message}", messageColor + message);
 
 
+        event.message(Component.text(chatFormat));
+    }
 
-        event.message(Component.text(ChatColor.translateAlternateColorCodes('&', chatFormat)));
-    }*/
+
 
 }

@@ -18,10 +18,16 @@ public class LuckpermsListener {
 
         eventBus = lpf.getAPI().getEventBus();
         eventBus.subscribe(lpf, UserDataRecalculateEvent.class, this::onDataRecalculate);
+        eventBus.subscribe(lpf, NodeMutateEvent.class, this::onNodeMutate);
     }
 
     private void onDataRecalculate(UserDataRecalculateEvent event) {
-        lpf.log("event");
+        lpf.log("data event");
+        tab.updateTablist();
     }
 
+    private void onNodeMutate(NodeMutateEvent event) {
+        lpf.log("node event");
+        tab.updateTablist();
+    }
 }

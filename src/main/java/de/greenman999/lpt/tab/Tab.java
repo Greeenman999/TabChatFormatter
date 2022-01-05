@@ -46,13 +46,6 @@ public class Tab {
                 suffixSplitCharacter = "";
             }
 
-            /*player.sendMessage("Prefix: " + prefix);
-            player.sendMessage("PrefixSplitCharacter: " + prefixSplitCharacter);
-            player.sendMessage("Username Color: " + usernameColor);
-            player.sendMessage("Username: " + username);
-            player.sendMessage("Suffix: " + suffix);
-            player.sendMessage("SuffixSplitCharacter: " + suffixSplitCharacter);*/
-
 
 
 

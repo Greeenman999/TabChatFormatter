@@ -34,10 +34,7 @@ public class ChatListener implements Listener {
             templates.addAll(templateProvider.getTemplates(player));
         }
 
-        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> {
-            return MiniMessage.get().parse(chatFormat, templates);
-
-        });
+        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> MiniMessage.get().parse(chatFormat, templates));
     }
 
 }

@@ -19,12 +19,18 @@ public final class TabChatFormatter extends JavaPlugin {
 
     private HashSet<TemplateProvider> templateProviders = new HashSet<>();
 
+    private ChatListener chatListener;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
 
         CommandAPI.onEnable(this);
         registerAllCommands();
+
+        chatListener = new ChatListener(this);
+
+        pluginManager.registerEvents(chatListener, this);
         saveDefaultConfig();
 
         loadAllProviders();

@@ -23,8 +23,8 @@ public class LuckpermsTemplateProvider extends TemplateProvider {
 
         templates.add(Template.of("prefix", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getPrefix()));
         templates.add(Template.of("suffix", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getSuffix()));
-        templates.add(Template.of("usernameColor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("usernamecolor")));
-        templates.add(Template.of("messageColor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("messagecolor")));
+        templates.add(Template.of("usernamecolor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("usernamecolor")));
+        templates.add(Template.of("messagecolor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("messagecolor")));
 
         return templates;
     }

@@ -1,5 +1,5 @@
-name: LPF
+name: TabChatFormatter
 version: '1.0'
-main: de.greenman999.lpt.LPF
+main: de.greenman999.tabchatformatter.TabChatFormatter
 api-version: 1.18
 softdepend: [LuckPerms]

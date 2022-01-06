@@ -28,7 +28,7 @@ public class ChatListener implements Listener {
         String chatFormat = tabChatFormatter.getConfig().getString("chat-format");
 
         List<Template> templates = List.of();
-        templates.add(Template.of("message", PlainTextComponentSerializer.plainText().serialize(asyncChatEvent.message())));
+        templates.add(Template.of("message", asyncChatEvent.message()));
 
         for(TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
             templates.addAll(templateProvider.getTemplates(player));

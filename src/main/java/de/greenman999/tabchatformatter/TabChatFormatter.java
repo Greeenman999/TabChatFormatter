@@ -4,6 +4,7 @@ import de.greenman999.tabchatformatter.templateprovider.BasicTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.LuckpermsTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
 import dev.jorel.commandapi.CommandAPI;
+import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
@@ -41,7 +42,7 @@ public final class TabChatFormatter extends JavaPlugin {
     }
 
     private void registerAllCommands() {
-
+        registerTabChatFormatterCommand();
     }
 
     @Override
@@ -70,6 +71,18 @@ public final class TabChatFormatter extends JavaPlugin {
 
     public HashSet<TemplateProvider> getProviders() {
         return providers;
+    }
+
+    public void registerTabChatFormatterCommand() {
+        new CommandAPICommand("tabchatformatter")
+                .withAliases("tcf")
+                .withSubcommand(new CommandAPICommand("reload")
+                        .withPermission("tabchatformatter.reload")
+                        .executes((sender,args) -> {
+                            reloadConfig();
+                            sender.sendMessage("§aReloaded TabChatFormatter Configuration file!");
+                        })
+                ).register();
     }
 
 

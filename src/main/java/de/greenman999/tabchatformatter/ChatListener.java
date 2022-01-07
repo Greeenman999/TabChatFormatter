@@ -2,12 +2,15 @@ package de.greenman999.tabchatformatter;
 
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
 import io.papermc.paper.event.player.AsyncChatEvent;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -23,22 +26,23 @@ public class ChatListener implements Listener {
     }
 
     @EventHandler
-    public void onChat(AsyncChatEvent asyncChatEvent){
-        Player player = asyncChatEvent.getPlayer();
-        UUID uuid = player.getUniqueId();
-
+    public void onChat(AsyncChatEvent asyncChatEvent) {
         String chatFormat = tabChatFormatter.getConfig().getString("chat-format");
 
-        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> {
-            List<Template> templates = new ArrayList<>();
-            templates.add(Template.of("message", message));
-            templates.add(Template.of("name", sourceDisplayName));
+        if(chatFormat == null) {
+            chatFormat = "<prefix> <usernamecolor><name> <suffix> » <message>";
+        }
+        String finalChatFormat = chatFormat;
+        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) ->
+                MiniMessage.builder().build().parse(finalChatFormat, templatesFor(source, sourceDisplayName, message, viewer)));
+    }
 
-            for(TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
-                templates.addAll(templateProvider.getTemplates(source));
-            }
-            return MiniMessage.get().parse(chatFormat, templates);
-        });
+    private List<Template> templatesFor(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {
+        List<Template> templates = new ArrayList<>();
+        for (TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
+            templates.addAll(templateProvider.getTemplates(source));
+        }
+        return templates;
     }
 
 }

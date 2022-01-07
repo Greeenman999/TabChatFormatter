@@ -1,10 +1,10 @@
 package de.greenman999.tabchatformatter;
 
+import de.greenman999.tabchatformatter.templateprovider.BasicTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.LuckpermsTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPIConfig;
-import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,9 +17,7 @@ public final class TabChatFormatter extends JavaPlugin {
 
     private final String PREFIX = "§7[§eTabChatFormatter§7]§r ";
 
-    private HashSet<TemplateProvider> templateProviders = new HashSet<>();
-
-    private ChatListener chatListener;
+    private HashSet<TemplateProvider> provider = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -27,13 +25,11 @@ public final class TabChatFormatter extends JavaPlugin {
 
         CommandAPI.onEnable(this);
         registerAllCommands();
+        loadAllProviders();
 
-        chatListener = new ChatListener(this);
-
+        ChatListener chatListener = new ChatListener(provider, getConfig().getString("chat-format"));
         pluginManager.registerEvents(chatListener, this);
         saveDefaultConfig();
-
-        loadAllProviders();
 
         log("§cPlugin successfully enabled and loaded!");
     }
@@ -57,17 +53,16 @@ public final class TabChatFormatter extends JavaPlugin {
         this.getLogger().info(string);
     }
 
-    public HashSet<TemplateProvider> getTemplateProviders() {
-        return templateProviders;
-    }
 
     private void loadAllProviders() {
         addIfEnabled("LuckPerms", new LuckpermsTemplateProvider(this));
+
+        provider.add(new BasicTemplateProvider(this));
     }
 
     private void addIfEnabled(String name, TemplateProvider templateProvider) {
         if(pluginManager.isPluginEnabled(name)) {
-            templateProviders.add(templateProvider);
+            provider.add(templateProvider);
             log("Hooked into " + name + "!");
         }
     }

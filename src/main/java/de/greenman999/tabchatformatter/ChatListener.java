@@ -6,6 +6,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,14 +14,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public record ChatListener(
-        Set<TemplateProvider> templateProviders,
-        String chatFormat) implements Listener {
+public class ChatListener implements Listener {
+    private final TabChatFormatter tcf;
+    private final HashSet<TemplateProvider> templateProviders;
+    private final String chatFormat;
+
+    public ChatListener(TabChatFormatter tcf) {
+        this.tcf = tcf;
+        this.chatFormat = tcf.getConfig().getString("chat-format");
+        this.templateProviders = tcf.getProviders();
+    }
 
     @EventHandler
     public void onChat(AsyncChatEvent asyncChatEvent) {
-        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) ->
-                MiniMessage.builder().build().parse(chatFormat, templatesFor(source, sourceDisplayName, message, viewer)));
+        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> MiniMessage.builder().build().parse(chatFormat, templatesFor(source, sourceDisplayName, message, viewer)));
     }
 
     private List<Template> templatesFor(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {

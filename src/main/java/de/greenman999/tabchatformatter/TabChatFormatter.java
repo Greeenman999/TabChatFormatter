@@ -17,7 +17,7 @@ public final class TabChatFormatter extends JavaPlugin {
 
     private final String PREFIX = "§7[§eTabChatFormatter§7]§r ";
 
-    private HashSet<TemplateProvider> provider = new HashSet<>();
+    private HashSet<TemplateProvider> providers = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -27,7 +27,7 @@ public final class TabChatFormatter extends JavaPlugin {
         registerAllCommands();
         loadAllProviders();
 
-        ChatListener chatListener = new ChatListener(provider, getConfig().getString("chat-format"));
+        ChatListener chatListener = new ChatListener(this);
         pluginManager.registerEvents(chatListener, this);
         saveDefaultConfig();
 
@@ -57,14 +57,19 @@ public final class TabChatFormatter extends JavaPlugin {
     private void loadAllProviders() {
         addIfEnabled("LuckPerms", new LuckpermsTemplateProvider(this));
 
-        provider.add(new BasicTemplateProvider(this));
+        providers.add(new BasicTemplateProvider(this));
     }
 
     private void addIfEnabled(String name, TemplateProvider templateProvider) {
         if(pluginManager.isPluginEnabled(name)) {
-            provider.add(templateProvider);
+            providers.add(templateProvider);
+            templateProvider.init();
             log("Hooked into " + name + "!");
         }
+    }
+
+    public HashSet<TemplateProvider> getProviders() {
+        return providers;
     }
 
 

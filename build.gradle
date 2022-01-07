@@ -60,7 +60,9 @@ shadowJar {
     destinationDirectory = file("Server/plugins")
     dependencies {
         include dependency("dev.jorel.CommandAPI:commandapi-shade:6.5.3")
-
+        include dependency("net.kyori:adventure-platform-bukkit:4.0.0")
+        include dependency("net.kyori:adventure-api:4.9.3")
+        include dependency("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT")
     }
 }
 

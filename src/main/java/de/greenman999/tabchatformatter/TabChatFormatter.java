@@ -3,10 +3,15 @@ package de.greenman999.tabchatformatter;
 import de.greenman999.tabchatformatter.templateprovider.BasicTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.LuckpermsTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
+import de.greenman999.tabchatformatter.templateresolver.PlaceholderApiResolver;
+import de.greenman999.tabchatformatter.templateresolver.TemplateResolver;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
+import dev.jorel.commandapi.arguments.StringArgument;
+import dev.jorel.commandapi.arguments.TextArgument;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +24,7 @@ public final class TabChatFormatter extends JavaPlugin {
     private final String PREFIX = "§7[§eTabChatFormatter§7]§r ";
 
     private HashSet<TemplateProvider> providers = new HashSet<>();
+    private HashSet<TemplateResolver> resolvers = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -27,6 +33,7 @@ public final class TabChatFormatter extends JavaPlugin {
         CommandAPI.onEnable(this);
         registerAllCommands();
         loadAllProviders();
+        loadAllResolvers();
 
         ChatListener chatListener = new ChatListener(this);
         pluginManager.registerEvents(chatListener, this);
@@ -56,12 +63,16 @@ public final class TabChatFormatter extends JavaPlugin {
 
 
     private void loadAllProviders() {
-        addIfEnabled("LuckPerms", new LuckpermsTemplateProvider(this));
+        addTemplateProviderIfEnabled("LuckPerms", new LuckpermsTemplateProvider(this));
 
         providers.add(new BasicTemplateProvider(this));
     }
 
-    private void addIfEnabled(String name, TemplateProvider templateProvider) {
+    private void loadAllResolvers() {
+        addTemplateResolverIfEnabled("PlaceholderAPI",new PlaceholderApiResolver());
+    }
+
+    private void addTemplateProviderIfEnabled(String name, TemplateProvider templateProvider) {
         if(pluginManager.isPluginEnabled(name)) {
             providers.add(templateProvider);
             templateProvider.init();
@@ -69,8 +80,19 @@ public final class TabChatFormatter extends JavaPlugin {
         }
     }
 
+    private void addTemplateResolverIfEnabled(String name, TemplateResolver templateResolver) {
+        if(pluginManager.isPluginEnabled(name)) {
+            resolvers.add(templateResolver);
+            log("Hooked into " + name + "!");
+        }
+    }
+
     public HashSet<TemplateProvider> getProviders() {
         return providers;
+    }
+
+    public HashSet<TemplateResolver> getResolvers() {
+        return resolvers;
     }
 
     public void registerTabChatFormatterCommand() {
@@ -82,7 +104,14 @@ public final class TabChatFormatter extends JavaPlugin {
                             reloadConfig();
                             sender.sendMessage("§aReloaded TabChatFormatter Configuration file!");
                         })
-                ).register();
+                )
+                .withSubcommand(new CommandAPICommand("test")
+                        .withPermission("tabchatformatter.test")
+                        .withArguments(new TextArgument("input"))
+                        .executes((sender,args) -> {
+                        })
+                )
+                .register();
     }
 
 

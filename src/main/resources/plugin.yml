@@ -2,4 +2,4 @@ name: TabChatFormatter
 version: '1.0'
 main: de.greenman999.tabchatformatter.TabChatFormatter
 api-version: 1.18
-softdepend: [LuckPerms]
+softdepend: [LuckPerms,PlaceholderAPI]

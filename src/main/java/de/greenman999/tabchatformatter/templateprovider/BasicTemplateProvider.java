@@ -16,7 +16,6 @@ public class BasicTemplateProvider extends TemplateProvider {
     public HashSet<Template> getTemplates(Player player) {
         HashSet<Template> templates = new HashSet<>();
 
-        templates.add(Template.of("name", player.getName()));
         templates.add(Template.of("uuid", player.getUniqueId().toString()));
         templates.add(Template.of("ping", player.getPing() + ""));
         templates.add(Template.of("experience", player.getTotalExperience() + ""));

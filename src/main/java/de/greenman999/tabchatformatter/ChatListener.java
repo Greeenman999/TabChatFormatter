@@ -27,14 +27,17 @@ public class ChatListener implements Listener {
 
         String chatFormat = tabChatFormatter.getConfig().getString("chat-format");
 
-        List<Template> templates = List.of();
-        templates.add(Template.of("message", asyncChatEvent.message()));
+        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> {
+            List<Template> templates = List.of();
+            templates.add(Template.of("message", message));
+            templates.add(Template.of("name", sourceDisplayName));
 
-        for(TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
-            templates.addAll(templateProvider.getTemplates(player));
-        }
+            for(TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
+                templates.addAll(templateProvider.getTemplates(source));
+            }
 
-        asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> MiniMessage.get().parse(chatFormat, templates));
+            return MiniMessage.get().parse(chatFormat, templates);
+        });
     }
 
 }

@@ -43,8 +43,9 @@ dependencies {
     implementation 'dev.jorel.CommandAPI:commandapi-shade:6.5.3'
     annotationProcessor "dev.jorel.CommandAPI:commandapi-annotations:6.5.3"
     compileOnly 'net.luckperms:api:5.3'
+    implementation "net.kyori:adventure-platform-bukkit:4.0.0"
+    implementation "net.kyori:adventure-api:4.9.3"
     implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
-
 }
 
 processResources {

@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,14 +30,13 @@ public class ChatListener implements Listener {
         String chatFormat = tabChatFormatter.getConfig().getString("chat-format");
 
         asyncChatEvent.renderer((source, sourceDisplayName, message, viewer) -> {
-            List<Template> templates = List.of();
+            List<Template> templates = new ArrayList<>();
             templates.add(Template.of("message", message));
             templates.add(Template.of("name", sourceDisplayName));
 
             for(TemplateProvider templateProvider : tabChatFormatter.getTemplateProviders()) {
                 templates.addAll(templateProvider.getTemplates(source));
             }
-
             return MiniMessage.get().parse(chatFormat, templates);
         });
     }

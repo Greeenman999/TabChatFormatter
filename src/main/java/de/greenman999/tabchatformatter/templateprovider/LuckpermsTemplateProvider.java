@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class LuckpermsTemplateProvider extends TemplateProvider {
@@ -20,10 +21,10 @@ public class LuckpermsTemplateProvider extends TemplateProvider {
     @Override
     public Set<Template> getTemplates(Player player) {
         return Set.of(
-                Template.of("prefix", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getPrefix()),
-                Template.of("suffix", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getSuffix()),
-                Template.of("usernamecolor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("usernamecolor")),
-                Template.of("messagecolor", api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("messagecolor"))
+                Template.of("prefix", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getPrefix()).orElse("")),
+                Template.of("suffix", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getSuffix()).orElse("")),
+                Template.of("usernamecolor", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("usernamecolor")).orElse("")),
+                Template.of("messagecolor", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("messagecolor")).orElse(""))
         );
     }
 

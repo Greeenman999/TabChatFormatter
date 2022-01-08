@@ -36,7 +36,7 @@ public class ChatListener implements Listener {
                 MiniMessage.builder()
                         .placeholderResolver(resolveFor(source, sourceDisplayName, message, viewer))
                         .build()
-                        .parse(chatFormat, templatesFor(source, sourceDisplayName, message, viewer)));
+                        .parse(tcf.getConfig().getString("chat-format"), templatesFor(source, sourceDisplayName, message, viewer)));
     }
 
     private List<Template> templatesFor(@NotNull Player source, @NotNull Component sourceDisplayName, @NotNull Component message, @NotNull Audience viewer) {

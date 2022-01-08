@@ -23,6 +23,8 @@ public record LuckpermsTemplateProvider(TabChatFormatter tabChatFormatter) imple
             var templates = new HashSet<Placeholder<?>>();
             templates.add(Placeholder.miniMessage("prefix", Optional.ofNullable(meta.getPrefix()).orElse("")));
             templates.add(Placeholder.miniMessage("suffix", Optional.ofNullable(meta.getSuffix()).orElse("")));
+            templates.add(Placeholder.miniMessage("usernamecolor", Optional.ofNullable(meta.getMetaValue("usernamecolor")).orElse("")));
+            templates.add(Placeholder.miniMessage("messagecolor", Optional.ofNullable(meta.getMetaValue("messagecolor")).orElse("")));
             return PlaceholderResolver.placeholders(templates);
         }
         return PlaceholderResolver.empty();

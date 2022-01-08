@@ -44,6 +44,7 @@ public final class TabChatFormatter extends JavaPlugin {
         playerJoinListener = new PlayerJoinListener(this, tab);
         pluginManager.registerEvents(chatListener, this);
         pluginManager.registerEvents(playerJoinListener, this);
+        tab.startScheduler();
         saveDefaultConfig();
 
         log("§cPlugin successfully enabled and loaded!");

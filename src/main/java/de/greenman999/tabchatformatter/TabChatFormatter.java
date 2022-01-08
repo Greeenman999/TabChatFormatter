@@ -5,8 +5,8 @@ import de.greenman999.tabchatformatter.listener.PlayerJoinListener;
 import de.greenman999.tabchatformatter.templateprovider.BasicTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.LuckpermsTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
-import de.greenman999.tabchatformatter.templateresolver.PlaceholderApiResolver;
-import de.greenman999.tabchatformatter.templateresolver.TemplateResolver;
+import de.greenman999.tabchatformatter.templateresolver.PlaceholderApiPreprocessor;
+import de.greenman999.tabchatformatter.templateresolver.FormatPreprocessor;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
@@ -22,7 +22,7 @@ public final class TabChatFormatter extends JavaPlugin {
     private final PluginManager pluginManager = Bukkit.getPluginManager();
 
     private HashSet<TemplateProvider> providers = new HashSet<>();
-    private HashSet<TemplateResolver> resolvers = new HashSet<>();
+    private HashSet<FormatPreprocessor> resolvers = new HashSet<>();
 
     private Tab tab;
     private LPListener lpListener;
@@ -76,20 +76,19 @@ public final class TabChatFormatter extends JavaPlugin {
     }
 
     private void loadAllResolvers() {
-        addTemplateResolverIfEnabled("PlaceholderAPI",new PlaceholderApiResolver());
+        addTemplateResolverIfEnabled("PlaceholderAPI",new PlaceholderApiPreprocessor());
     }
 
     private void addTemplateProviderIfEnabled(String name, TemplateProvider templateProvider) {
         if(pluginManager.isPluginEnabled(name)) {
             providers.add(templateProvider);
-            templateProvider.init();
             log("Hooked into " + name + "!");
         }
     }
 
-    private void addTemplateResolverIfEnabled(String name, TemplateResolver templateResolver) {
+    private void addTemplateResolverIfEnabled(String name, FormatPreprocessor formatPreprocessor) {
         if(pluginManager.isPluginEnabled(name)) {
-            resolvers.add(templateResolver);
+            resolvers.add(formatPreprocessor);
             log("Hooked into " + name + "!");
         }
     }
@@ -98,7 +97,7 @@ public final class TabChatFormatter extends JavaPlugin {
         return providers;
     }
 
-    public HashSet<TemplateResolver> getResolvers() {
+    public HashSet<FormatPreprocessor> getResolvers() {
         return resolvers;
     }
 
@@ -121,6 +120,8 @@ public final class TabChatFormatter extends JavaPlugin {
                 )
                 .register();
     }
+
+
 
 
 }

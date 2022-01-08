@@ -1,21 +1,12 @@
 package de.greenman999.tabchatformatter.templateprovider;
 
-import de.greenman999.tabchatformatter.TabChatFormatter;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+@FunctionalInterface
+public interface TemplateProvider {
 
-public abstract class TemplateProvider {
-
-    public final TabChatFormatter tabChatFormatter;
-
-    public TemplateProvider(TabChatFormatter tabChatFormatter) {
-        this.tabChatFormatter = tabChatFormatter;
-    }
-
-    public abstract Set<Template> getTemplates(Player player);
-
-    public abstract void init();
+    PlaceholderResolver templatesFor(@NotNull Player source);
 
 }

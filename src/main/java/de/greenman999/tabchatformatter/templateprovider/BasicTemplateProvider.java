@@ -1,32 +1,23 @@
 package de.greenman999.tabchatformatter.templateprovider;
 
 import de.greenman999.tabchatformatter.TabChatFormatter;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
-
-public class BasicTemplateProvider extends TemplateProvider {
-
-    public BasicTemplateProvider(TabChatFormatter tabChatFormatter) {
-        super(tabChatFormatter);
-    }
+public record BasicTemplateProvider(TabChatFormatter tabChatFormatter) implements TemplateProvider {
 
     @Override
-    public Set<Template> getTemplates(Player player) {
-        return Set.of(
-                Template.of("uuid", player.getUniqueId().toString()),
-                Template.of("ping", player.getPing() + ""),
-                Template.of("experience", player.getTotalExperience() + ""),
-                Template.of("world", player.getWorld().getName()),
-                Template.of("level", player.getLevel() + ""),
-                Template.of("health", player.getHealth() + ""),
-                Template.of("gamemode", player.getGameMode().name())
+    public PlaceholderResolver templatesFor(@NotNull Player player) {
+        return PlaceholderResolver.placeholders(
+                Placeholder.miniMessage("uuid", player.getUniqueId().toString()),
+                Placeholder.miniMessage("ping", player.getPing() + ""),
+                Placeholder.miniMessage("experience", player.getTotalExperience() + ""),
+                Placeholder.miniMessage("world", player.getWorld().getName()),
+                Placeholder.miniMessage("level", player.getLevel() + ""),
+                Placeholder.miniMessage("health", player.getHealth() + ""),
+                Placeholder.miniMessage("gamemode", player.getGameMode().name())
         );
-    }
-
-    @Override
-    public void init() {
-
     }
 }

@@ -1,40 +1,40 @@
 package de.greenman999.tabchatformatter.templateprovider;
 
 import de.greenman999.tabchatformatter.TabChatFormatter;
-import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.placeholder.Placeholder;
+import net.kyori.adventure.text.minimessage.placeholder.PlaceholderResolver;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
-public class LuckpermsTemplateProvider extends TemplateProvider {
-
-    private LuckPerms api;
-
-    public LuckpermsTemplateProvider(TabChatFormatter tabChatFormatter) {
-        super(tabChatFormatter);
-    }
+public record LuckpermsTemplateProvider(TabChatFormatter tabChatFormatter) implements TemplateProvider {
 
     @Override
-    public Set<Template> getTemplates(Player player) {
-        return Set.of(
-                Template.of("prefix", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getPrefix()).orElse("")),
-                Template.of("suffix", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getSuffix()).orElse("")),
-                Template.of("usernamecolor", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("usernamecolor")).orElse("")),
-                Template.of("messagecolor", Optional.ofNullable(api.getUserManager().getUser(player.getUniqueId()).getCachedData().getMetaData().getMetaValue("messagecolor")).orElse(""))
-        );
+    public PlaceholderResolver templatesFor(@NotNull Player source) {
+        var user = getAPI().getUserManager().getUser(source.getUniqueId());
+
+        if (user != null) {
+            var meta = user.getCachedData().getMetaData();
+            var templates = new HashSet<Placeholder<?>>();
+            templates.add(Placeholder.miniMessage("prefix", Optional.ofNullable(meta.getPrefix()).orElse("")));
+            templates.add(Placeholder.miniMessage("suffix", Optional.ofNullable(meta.getSuffix()).orElse("")));
+            return PlaceholderResolver.placeholders(templates);
+        }
+        return PlaceholderResolver.empty();
     }
 
-    @Override
-    public void init() {
+    private LuckPerms getAPI() {
         RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
-            api = provider.getProvider();
+            return provider.getProvider();
         }else {
-            super.tabChatFormatter.log("An error occurred whilst trying to enable " + this.getClass().getName() + "!");
+            tabChatFormatter.log("An error occurred whilst trying to enable " + this.getClass().getName() + "!");
+            return null;
         }
     }
 

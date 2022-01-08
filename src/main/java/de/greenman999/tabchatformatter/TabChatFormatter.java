@@ -1,5 +1,7 @@
 package de.greenman999.tabchatformatter;
 
+import de.greenman999.tabchatformatter.listener.LPListener;
+import de.greenman999.tabchatformatter.listener.PlayerJoinListener;
 import de.greenman999.tabchatformatter.templateprovider.BasicTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.LuckpermsTemplateProvider;
 import de.greenman999.tabchatformatter.templateprovider.TemplateProvider;
@@ -8,10 +10,8 @@ import de.greenman999.tabchatformatter.templateresolver.TemplateResolver;
 import dev.jorel.commandapi.CommandAPI;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.CommandAPIConfig;
-import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.arguments.TextArgument;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,8 +20,6 @@ import java.util.HashSet;
 public final class TabChatFormatter extends JavaPlugin {
 
     private final PluginManager pluginManager = Bukkit.getPluginManager();
-
-    private final String PREFIX = "§7[§eTabChatFormatter§7]§r ";
 
     private HashSet<TemplateProvider> providers = new HashSet<>();
     private HashSet<TemplateResolver> resolvers = new HashSet<>();
@@ -36,7 +34,11 @@ public final class TabChatFormatter extends JavaPlugin {
         loadAllResolvers();
 
         ChatListener chatListener = new ChatListener(this);
+        Tab tab = new Tab(this);
+        LPListener lpListener = new LPListener(this, tab);
+        PlayerJoinListener playerJoinListener = new PlayerJoinListener(this, tab);
         pluginManager.registerEvents(chatListener, this);
+        pluginManager.registerEvents(playerJoinListener, this);
         saveDefaultConfig();
 
         log("§cPlugin successfully enabled and loaded!");

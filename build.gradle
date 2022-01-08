@@ -48,8 +48,8 @@ dependencies {
     annotationProcessor "dev.jorel.CommandAPI:commandapi-annotations:6.5.3"
     compileOnly 'net.luckperms:api:5.3'
     implementation "net.kyori:adventure-platform-bukkit:4.0.0"
-    implementation "net.kyori:adventure-api:4.10"
-    implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    implementation "net.kyori:adventure-api:4.9.3"
+    implementation "net.kyori:adventure-text-minimessage:4.10.0-SNAPSHOT"
     compileOnly 'me.clip:placeholderapi:2.11.1'
     //compileOnly 'com.github.MilkBowl:VaultAPI:1.7'
 }

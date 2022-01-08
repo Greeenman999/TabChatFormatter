@@ -24,6 +24,11 @@ public final class TabChatFormatter extends JavaPlugin {
     private HashSet<TemplateProvider> providers = new HashSet<>();
     private HashSet<TemplateResolver> resolvers = new HashSet<>();
 
+    private Tab tab;
+    private LPListener lpListener;
+    private PlayerJoinListener playerJoinListener;
+    private ChatListener chatListener;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -33,10 +38,10 @@ public final class TabChatFormatter extends JavaPlugin {
         loadAllProviders();
         loadAllResolvers();
 
-        ChatListener chatListener = new ChatListener(this);
-        Tab tab = new Tab(this);
-        LPListener lpListener = new LPListener(this, tab);
-        PlayerJoinListener playerJoinListener = new PlayerJoinListener(this, tab);
+        chatListener = new ChatListener(this);
+        tab = new Tab(this);
+        lpListener = new LPListener(this, tab);
+        playerJoinListener = new PlayerJoinListener(this, tab);
         pluginManager.registerEvents(chatListener, this);
         pluginManager.registerEvents(playerJoinListener, this);
         saveDefaultConfig();
@@ -104,7 +109,8 @@ public final class TabChatFormatter extends JavaPlugin {
                         .withPermission("tabchatformatter.reload")
                         .executes((sender,args) -> {
                             reloadConfig();
-                            sender.sendMessage("§aReloaded TabChatFormatter Configuration file!");
+                            tab.formatTablistEntries();
+                            sender.sendMessage("§aReloaded TabChatFormatter!");
                         })
                 )
                 .withSubcommand(new CommandAPICommand("test")

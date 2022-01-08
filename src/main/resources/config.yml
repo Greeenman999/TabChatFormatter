@@ -1,1 +1,2 @@
-chat-format: "<prefix> <usernamecolor><name> <suffix> » <messagecolor><message>"
+chat-format: "<prefix> <hover:show_text:'<red><uuid>'><usernamecolor><name></hover> <suffix> » <messagecolor><message>"
+tab-format: "<prefix> <usernamecolor><name> <suffix> <%statistic_deaths%>"
